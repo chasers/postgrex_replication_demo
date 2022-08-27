@@ -1,14 +1,23 @@
 import Config
 
+config :replication_demo,
+  env: String.to_atom(System.get_env("MIX_ENV", "dev"))
+
 # Configure your database
 config :replication_demo, ReplicationDemo.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
+  port: "5432",
   database: "replication_demo_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 10,
+  # Not official Repo configs
+  # Make sure your slots are `temporary` unless you need to be guaranteed every change
+  # Slots can get backed up and fill the disk with wal data which still needs to be replicated
+  replication_slot_mode: :temporary,
+  publication: "demo_publication"
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

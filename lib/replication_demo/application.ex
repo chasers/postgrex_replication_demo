@@ -7,9 +7,13 @@ defmodule ReplicationDemo.Application do
 
   @impl true
   def start(_type, _args) do
+    repl_opts = Application.get_env(:replication_demo, ReplicationDemo.Repo)
+
     children = [
       # Start the Ecto repository
       ReplicationDemo.Repo,
+      # Start Postgres replication
+      {ReplicationDemo.Replication, repl_opts},
       # Start the Telemetry supervisor
       ReplicationDemoWeb.Telemetry,
       # Start the PubSub system

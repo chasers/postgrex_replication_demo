@@ -1,0 +1,39 @@
+<h1>Listing Notifications</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.notification_index_path(@socket, :index)}>
+    <.live_component
+      module={ReplicationDemoWeb.NotificationLive.FormComponent}
+      id={@notification.id || :new}
+      title={@page_title}
+      action={@live_action}
+      notification={@notification}
+      return_to={Routes.notification_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Message</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="notifications">
+    <%= for notification <- @notifications do %>
+      <tr id={"notification-#{notification.id}"}>
+        <td><%= notification.message %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.notification_show_path(@socket, :show, notification) %></span>
+          <span><%= live_patch "Edit", to: Routes.notification_index_path(@socket, :edit, notification) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: notification.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Notification", to: Routes.notification_index_path(@socket, :new) %></span>

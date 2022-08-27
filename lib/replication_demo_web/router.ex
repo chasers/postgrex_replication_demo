@@ -18,6 +18,13 @@ defmodule ReplicationDemoWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    live "/notifications", NotificationLive.Index, :index
+    live "/notifications/new", NotificationLive.Index, :new
+    live "/notifications/:id/edit", NotificationLive.Index, :edit
+
+    live "/notifications/:id", NotificationLive.Show, :show
+    live "/notifications/:id/show/edit", NotificationLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

@@ -3,10 +3,18 @@ defmodule ReplicationDemoWeb.NotificationLive.Index do
 
   alias ReplicationDemo.Accounts
   alias ReplicationDemo.Accounts.Notification
+  alias Phoenix.PubSub
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :notifications, list_notifications())}
+    if connected?(socket), do: PubSub.subscribe(ReplicationDemo.PubSub, "postgres")
+
+    socket =
+      socket
+      |> assign(:notifications, list_notifications())
+      |> assign(:latest_change, nil)
+
+    {:ok, socket}
   end
 
   @impl true
@@ -38,6 +46,15 @@ defmodule ReplicationDemoWeb.NotificationLive.Index do
     {:ok, _} = Accounts.delete_notification(notification)
 
     {:noreply, assign(socket, :notifications, list_notifications())}
+  end
+
+  @impl true
+  def handle_info({:change, %{new_record: record}}, socket) do
+    {:noreply, assign(socket, :latest_change, record["id"])}
+  end
+
+  def handle_info({:change, %{old_record: record}}, socket) do
+    {:noreply, assign(socket, :latest_change, record["id"])}
   end
 
   defp list_notifications do

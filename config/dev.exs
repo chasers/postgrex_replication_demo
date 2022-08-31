@@ -12,11 +12,14 @@ config :replication_demo, ReplicationDemo.Repo,
   database: "replication_demo_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10,
-  # Not official Repo configs
-  # Make sure your slots are `temporary` unless you need to be guaranteed every change
-  # Slots can get backed up and fill the disk with wal data which still needs to be replicated
-  replication_slot_mode: :temporary,
+  pool_size: 10
+
+config :replication_demo, ReplicationDemo.Replication,
+  username: "repl_role",
+  password: "postgres",
+  hostname: "localhost",
+  port: "5432",
+  database: "replication_demo_dev",
   publication: "demo_publication"
 
 # For development, we disable any cache and enable

@@ -18,7 +18,9 @@ defmodule ReplicationDemo.Accounts do
 
   """
   def list_notifications do
-    Repo.all(Notification)
+    Notification
+    |> limit(25)
+    |> Repo.all()
   end
 
   @doc """

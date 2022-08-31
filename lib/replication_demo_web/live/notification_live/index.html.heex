@@ -21,6 +21,9 @@
       <th></th>
     </tr>
   </thead>
+  <div>
+  <%= @latest_change %>
+  </div>
   <tbody id="notifications">
     <%= for notification <- @notifications do %>
       <tr id={"notification-#{notification.id}"}>

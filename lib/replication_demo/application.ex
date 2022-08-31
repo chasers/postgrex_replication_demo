@@ -7,7 +7,7 @@ defmodule ReplicationDemo.Application do
 
   @impl true
   def start(_type, _args) do
-    repl_opts = Application.get_env(:replication_demo, ReplicationDemo.Repo)
+    repl_opts = Application.get_env(:replication_demo, ReplicationDemo.Replication)
 
     children = [
       # Start the Ecto repository

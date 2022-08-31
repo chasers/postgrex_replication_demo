@@ -16,9 +16,10 @@ defmodule ReplicationDemo.Repo.Migrations.PrepReplication do
   use Ecto.Migration
   @disable_ddl_transaction true
   @disable_migration_lock true
-  @username Application.get_env(:replication_demo, ReplicationDemo.Repo)[:username]
+  @username Application.get_env(:replication_demo, ReplicationDemo.Replication)[:username]
+  @password Application.get_env(:replication_demo, ReplicationDemo.Replication)[:password]
   @env Application.get_env(:replication_demo, :env)
-  @publication Application.get_env(:replication_demo, ReplicationDemo.Repo)[:publication]
+  @publication Application.get_env(:replication_demo, ReplicationDemo.Replication)[:publication]
 
   def up do
     if @env in [:dev, :test, :prod] do
@@ -32,8 +33,8 @@ defmodule ReplicationDemo.Repo.Migrations.PrepReplication do
     execute("ALTER SYSTEM SET max_wal_senders='10';")
     execute("ALTER SYSTEM SET max_replication_slots='10';")
 
-    # Users need replication permissions
-    execute("ALTER ROLE #{@username} WITH REPLICATION;")
+    # Create a replication user
+    execute("CREATE ROLE #{@username} WITH REPLICATION LOGIN PASSWORD '#{@password}'")
 
     # Or you can do this for specific tables
     execute("CREATE PUBLICATION #{@publication} FOR ALL TABLES;")

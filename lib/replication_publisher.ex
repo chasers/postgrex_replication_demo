@@ -35,7 +35,7 @@ defmodule ReplicationDemo.ReplicationPublisher do
     if relation do
       record =
         for {column, index} <- Enum.with_index(relation.columns),
-            do: {column.name, elem(message.changed_key_tuple_data, index)},
+            do: {String.to_atom(column.name), elem(message.changed_key_tuple_data, index)},
             into: %{}
 
       change = %{relation: relation, old_record: record}
@@ -55,7 +55,7 @@ defmodule ReplicationDemo.ReplicationPublisher do
     if relation do
       record =
         for {column, index} <- Enum.with_index(relation.columns),
-            do: {column.name, elem(message.old_tuple_data, index)},
+            do: {String.to_atom(column.name), elem(message.old_tuple_data, index)},
             into: %{}
 
       change = %{relation: relation, old_record: record}
@@ -75,7 +75,7 @@ defmodule ReplicationDemo.ReplicationPublisher do
     if relation do
       record =
         for {column, index} <- Enum.with_index(relation.columns),
-            do: {column.name, elem(message.tuple_data, index)},
+            do: {String.to_atom(column.name), elem(message.tuple_data, index)},
             into: %{}
 
       change = %{relation: relation, new_record: record}

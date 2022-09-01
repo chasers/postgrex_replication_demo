@@ -50,7 +50,7 @@ defmodule ReplicationDemoWeb.NotificationLive.Index do
 
   @impl true
   def handle_info({:change, %{new_record: record}}, socket) do
-    {:noreply, assign(socket, :latest_change, record["id"])}
+    {:noreply, assign(socket, :latest_change, record.id)}
   end
 
   def handle_info({:change, %{old_record: record}}, socket) do

@@ -10,16 +10,19 @@ defmodule ReplicationDemo.ReplicationPublisher do
 
   defstruct [:relations]
 
+  @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
 
+  @spec process_message(any) :: :ok
   def process_message(message) do
     GenServer.cast(__MODULE__, {:message, message})
   end
 
   @impl true
   def init(_stack) do
+    Process.flag(:message_queue_data, :off_heap)
     {:ok, %__MODULE__{}}
   end
 

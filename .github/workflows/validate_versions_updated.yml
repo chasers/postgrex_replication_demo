@@ -4,7 +4,7 @@ on:
     branches:
       - 'main'
 
-name: Release
+name: Defaults
 
 jobs:
   versions_updated:
@@ -20,10 +20,12 @@ jobs:
           files: |
              CHANGELOG.md
              mix.exs
+      - name: Log Files
+        id: log_entry
+        run: echo "${{ steps.verify_changed_files }}"
       - name: Fail Unless Versions Updated
         id: fail_if_changed
-        if: steps.verify-changed-files.outputs.files_changed == 'false'
+        if: steps.verify_changed_files.outputs.files_changed == 'false'
         run: |
-              echo "Changed files: ${{ steps.verify_changed_files }}"
               echo "::error ::Please update the CHANGELOG.md and/or mix.exs version"
               exit 1

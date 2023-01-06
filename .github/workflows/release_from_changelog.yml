@@ -7,27 +7,27 @@ on:
 name: Release
 
 jobs:
-  changelog_changed:
-    name: Changelog Changed
+  versions_updated:
+    name: Versions Updated
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Verify Changelog Changed
+      - name: Verify Versions Updated
         uses: tj-actions/verify-changed-files@v13
         id: verify-changed-files
         with:
           files: |
              CHANGELOG.md
              mix.exs
-      - name: Fail Unless Changelog Changed
+      - name: Fail Unless Versions Updated
         id: fail_if_changed
         run: |
               echo "::error ::Please update the CHANGELOG.md and/or mix.exs version"
               exit 1
   create_release:
     name: Create Release
-    needs: changelog_changed
+    needs: versions_updated
     runs-on: ubuntu-latest
     steps:
       - name: Get Changelog Entry

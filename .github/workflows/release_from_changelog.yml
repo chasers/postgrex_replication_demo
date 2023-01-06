@@ -22,6 +22,7 @@ jobs:
              mix.exs
       - name: Fail Unless Versions Updated
         id: fail_if_changed
+        if: steps.verify-changed-files.outputs.files_changed == 'false'
         run: |
               echo "::error ::Please update the CHANGELOG.md and/or mix.exs version"
               exit 1

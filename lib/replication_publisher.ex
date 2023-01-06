@@ -1,4 +1,8 @@
 defmodule ReplicationDemo.ReplicationPublisher do
+  @moduledoc """
+  Publishes messages from Replication to PubSub
+  """
+
   use GenServer
 
   alias PgoutputDecoder.Messages

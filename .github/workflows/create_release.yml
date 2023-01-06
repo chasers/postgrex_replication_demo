@@ -1,33 +1,14 @@
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [closed]
     branches:
       - 'main'
 
 name: Release
 
 jobs:
-  versions_updated:
-    name: Versions Updated
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Verify Versions Updated
-        uses: tj-actions/verify-changed-files@v13
-        id: verify_changed_files
-        with:
-          files: |
-             CHANGELOG.md
-             mix.exs
-      - name: Fail Unless Versions Updated
-        id: fail_if_changed
-        if: steps.verify-changed-files.outputs.files_changed == 'false'
-        run: |
-              echo "Changed files: ${{ steps.verify_changed_files }}"
-              echo "::error ::Please update the CHANGELOG.md and/or mix.exs version"
-              exit 1
   create_release:
+    if: github.event.pull_request.merged == true
     name: Create Release
     needs: versions_updated
     runs-on: ubuntu-latest
@@ -50,7 +31,7 @@ jobs:
           # This pulls from the "Get Changelog Entry" step above, referencing it's ID to get its outputs object.
           # See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           tag: ${{ steps.changelog_reader.outputs.version }}
-          name: Release ${{ steps.changelog_reader.outputs.version }}
+          name: ${{ steps.changelog_reader.outputs.version }}
           body: ${{ steps.changelog_reader.outputs.changes }}
           prerelease: ${{ steps.changelog_reader.outputs.status == 'prereleased' }}
           draft: ${{ steps.changelog_reader.outputs.status == 'unreleased' }}

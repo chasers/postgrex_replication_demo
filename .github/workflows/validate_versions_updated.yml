@@ -25,7 +25,7 @@ jobs:
         run: echo "${{ toJSON(steps.verify_changed_files) }}"
       - name: Fail Unless Versions Updated
         id: fail_if_changed
-        if: steps.verify_changed_files.outputs.files_changed == 'true'
+        if: steps.verify_changed_files.outputs.files_changed == 'false'
         run: |
               echo "::error ::Please update the CHANGELOG.md and/or mix.exs version"
               exit 1

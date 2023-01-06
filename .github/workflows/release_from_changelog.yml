@@ -18,6 +18,9 @@ jobs:
         shell: bash
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Log Entry
+        id: log_entry
+        run: echo "BLAH"
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
@@ -25,9 +28,6 @@ jobs:
           validation_level: warn
           version: ${{ steps.tag_name.outputs.current_version }}
           path: ./CHANGELOG.md
-      - name: Log Entry
-        id: log_entry
-        run: echo "BLAH"
       - name: Create/update release
         uses: ncipollo/release-action@v1
         with:

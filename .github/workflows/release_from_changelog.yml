@@ -22,7 +22,7 @@ jobs:
       - name: Fail Unless Changelog Changed
         id: fail_if_changed
         run: |
-              echo "::error file={name},line={line},endLine={endLine},title={title}::{message}"
+              echo "::error ::Please update the CHANGELOG.md"
               exit 1
       - name: Get Changelog Entry
         id: changelog_reader

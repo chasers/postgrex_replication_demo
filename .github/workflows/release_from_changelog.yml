@@ -20,6 +20,7 @@ jobs:
           files: |
              CHANGELOG.md
       - name: Get Changelog Entry
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
         with:

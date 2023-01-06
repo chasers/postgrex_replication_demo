@@ -4,6 +4,8 @@ on:
     branches:
       - 'main'
 
+name: Release
+
 jobs:
   changelog_changed:
     name: Changelog Changed

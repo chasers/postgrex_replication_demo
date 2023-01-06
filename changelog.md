@@ -16,5 +16,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Init changelog.md
+- Init CHANGELOG.md
 - Listens to Postgres changes and broadcasts them to a LiveView

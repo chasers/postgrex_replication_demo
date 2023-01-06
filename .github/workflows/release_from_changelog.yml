@@ -19,10 +19,11 @@ jobs:
         with:
           files: |
              CHANGELOG.md
+             mix.exs
       - name: Fail Unless Changelog Changed
         id: fail_if_changed
         run: |
-              echo "::error ::Please update the CHANGELOG.md"
+              echo "::error ::Please update the CHANGELOG.md and/or mix.exs version"
               exit 1
   create_release:
     name: Create Release

@@ -1,39 +1,40 @@
-on:
-  pull_request:
-    types: [closed]
-    branches:
-      - 'main'
+name: Create Release
 
-name: Release
+on:
+  push:
+    branches:
+      - 'releases/latest'
 
 jobs:
-  create_release:
-    if: github.event.pull_request.merged == true
-    name: Create Release
+  release:
+    runs-on: ubuntu-20.04
+    outputs:
+      published: ${{ steps.semantic.outputs.new_release_published }}
+      version: ${{ steps.semantic.outputs.new_release_version }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: semantic
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 18
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_PROJECT_ACTION }}
+
+  update-branch-name:
+    needs: [release]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Get Changelog Entry
-        id: changelog_reader
-        uses: mindsers/changelog-reader-action@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
         with:
-          validation_level: warn
-          # version: ${{ steps.tag_name.outputs.current_version }}
-          path: ./CHANGELOG.md
-      - name: Log Latest Changelog Version
-        id: log_entry
-        run: echo "Latest version is ${{ steps.changelog_reader.outputs.version }}"
-      - name: Create/update release
-        uses: ncipollo/release-action@v1
-        with:
-          # This pulls from the "Get Changelog Entry" step above, referencing it's ID to get its outputs object.
-          # See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          tag: ${{ steps.changelog_reader.outputs.version }}
-          name: ${{ steps.changelog_reader.outputs.version }}
-          body: ${{ steps.changelog_reader.outputs.changes }}
-          prerelease: ${{ steps.changelog_reader.outputs.status == 'prereleased' }}
-          draft: ${{ steps.changelog_reader.outputs.status == 'unreleased' }}
-          allowUpdates: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: refs/heads/releases/latest
+      - name: Update branch name
+        run: |
+          git branch -m releases/latest releases/v${{ needs.release.outputs.version }}
+          git push origin HEAD:releases/v${{ needs.release.outputs.version }}
+          git checkout -b main
+          git push origin --delete releases/latest
+          git branch releases/latest main
+          git push origin HEAD:releases/latest
+
   

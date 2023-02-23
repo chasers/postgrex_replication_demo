@@ -18,11 +18,10 @@ jobs:
         id: verify_changed_files
         with:
           files: |
-             CHANGELOG.md
              mix.exs
       - name: Fail Unless Versions Updated
         id: fail_if_changed
         if: steps.verify_changed_files.outputs.files_changed == 'true'
         run: |
-              echo "::error ::Please update the CHANGELOG.md and/or mix.exs version"
+              echo "::error ::Please update the mix.exs version"
               exit 1
